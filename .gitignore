@@ -9,3 +9,12 @@ __pycache__/
 # 本地配置文件
 .env
 *.local
+
+# 结果文件
+best_model.npz
+data
+test_acc.txt
+step1_hyperparam_results.txt
+hyperparam_results.txt
+weight_visualization.png
+

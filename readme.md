@@ -1,25 +1,133 @@
-数据预处理（依据）
- 
-•	数据集划分：CIFAR-10包含50k训练+10k测试图像。将50k训练集划分为45k训练+5k验证集。
-•	归一化处理：将像素值从[0,255]线性映射到[-1,1]（公式：(X/127.5)-1）。
-•	数据加载器：实现mini-batch处理，batch_size=64，使用numpy的np.memmap高效加载二进制数据。
-•	2. 模型架构（三层神经网络）
-'''python
-class ThreeLayerNet:
-    def __init__(self, input_size, hidden_sizes, output_size, activation='relu'):
-        # 权重初始化（He初始化）
-        self.W1 = np.random.randn(input_size, hidden_sizes[0]) * np.sqrt(2./input_size)
-        self.b1 = np.zeros(hidden_sizes[0])
-        self.W2 = np.random.randn(hidden_sizes[0], hidden_sizes[1]) * np.sqrt(2./hidden_sizes[0])
-        self.b2 = np.zeros(hidden_sizes[1])
-        self.W3 = np.random.randn(hidden_sizes[1], output_size) * np.sqrt(2./hidden_sizes[1])
-        self.b3 = np.zeros(output_size)
-        self.activation = activation  # 支持relu/sigmoid
-'''
+# CIFAR-10 三层神经网络分类器
+
+## 目录
+- [环境配置](#环境配置)
+- [数据集准备](#数据集准备)
+- [快速开始](#快速开始)
+  - [训练模型](#训练模型)
+  - [测试模型](#测试模型)
+- [超参数搜索](#超参数搜索)
+- [可视化](#可视化)
+- [文件结构](#文件结构)
+- [常见问题](#常见问题)
+
+---
+
+## 环境配置
+
+### 使用 conda  
+    conda create -n your_env_name python=3.10  
+    conda activate your_env_name  
 
 
-4. 训练过程（依据）
-•	优化器：SGD with momentum（动量系数0.9），学习率指数衰减（每epoch衰减5%）。
-•	正则化：L2正则化项加入损失计算，公式：loss = data_loss + 0.5*reg*(np.sum(W1**2)+np.sum(W2**2)+np.sum(W3**2))。
-•	早停机制：当验证集准确率连续3个epoch不提升时终止训练，保存最佳模型。
+### 使用 pip 
+    pip install numpy==1.22.4 matplotlib==3.7.1
 
+---
+
+## 数据集准备
+1. 从[CIFAR-10官网](https://www.cs.toronto.edu/\~kriz/cifar-10-python.tar.gz)下载数据集
+
+2. 解压后确保目录结构如下：  
+    project_root/  
+    └── data/  
+        └── cifar-10-batches-py/  
+            ├── data_batch_1  
+            ├── data_batch_2  
+            ├── data_batch_3  
+            ├── data_batch_4  
+            ├── data_batch_5  
+            └── test_batch
+
+---
+
+## 快速开始
+
+### 训练模型
+    python train.py
+    --data_dir data/cifar-10-batches-py
+    --hidden_sizes 512 256
+    --lr 0.005
+    --reg 0.001
+    --batch_size 128
+
+
+**输出文件**:
+- `best_model.npz` - 最佳模型权重
+- `training_curve.png` - loss曲线可视化
+
+---
+
+### 测试模型
+    python test.py
+    --model_path checkpoints/best_model.npz
+    --data_dir data/cifar-10-batches-py
+
+
+**预期输出**:
+[INFO] 测试准确率: 58.72%
+结果已保存至 test_accuracy.txt
+
+
+---
+
+## 超参数搜索
+    python hyperparam.py
+
+
+**输出文件**:
+- `hyperparam_results.txt` - 搜索结果表格
+
+---
+
+## 可视化
+
+### 训练曲线
+![训练曲线](train_curve.png)
+
+### 权重可视化
+    python visualize_weights.py
+
+---
+
+## 文件结构
+    .
+    ├── data_loader.py # 数据加载
+    ├── model.py # 网络定义
+    ├── train.py # 训练脚本
+    ├── utils.py # 辅助函数
+    ├── test.py # 测试脚本
+    ├── hyperparam.py # 超参数搜索脚本
+    ├── visualize_weights.py # 权重可视化脚本
+    ├── train_curve.png
+    ├── weight_visualization.png
+    └── README.md
+
+
+---
+
+## 常见问题
+
+### 1. 数据集路径错误
+> 错误信息：  
+`FileNotFoundError: No such file or directory: 'data/cifar-10-batches-py'`
+
+解决方案：
+- 修改所有脚本中的 --data_dir 参数为绝对路径
+
+
+解决方案：
+- 减小批次大小  
+- 简化网络结构
+
+
+
+### 3. 依赖版本冲突
+- 安装指定版本  
+    pip install numpy==1.22.4 matplotlib==3.7.1
+
+
+---
+
+**模型权重下载**  
+[百度网盘链接](https://pan.baidu.com/s/1djeQeHIPU2ilmwnR0X8xPQ?pwd=hewi )

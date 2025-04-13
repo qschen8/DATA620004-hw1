@@ -18,3 +18,5 @@ step1_hyperparam_results.txt
 hyperparam_results.txt
 weight_visualization.png
 data/cifar-10-python.tar.gz
+
+repo.md

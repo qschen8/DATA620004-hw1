@@ -1,4 +1,3 @@
-#=============== data_loader.py ===============
 import numpy as np
 import pickle
 import os

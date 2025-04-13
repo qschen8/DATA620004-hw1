@@ -1,3 +1,4 @@
+import argparse
 import datetime
 import numpy as np
 import os
@@ -95,10 +96,20 @@ def train(model, X_train, y_train, X_val, y_val,
 
 
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='Train a three-layer neural network')
+    parser.add_argument('--data_dir', type=str, default='data/cifar-10-batches-py', help='Path to the CIFAR-10 dataset')
+    parser.add_argument('--batch_size', type=int, default=256, help='Batch size for training')
+    parser.add_argument('--epochs', type=int, default=100, help='Number of epochs to train')
+    parser.add_argument('--lr', type=float, default=3e-2, help='Learning rate')
+    parser.add_argument('--reg', type=float, default=5e-4, help='Regularization strength')
+    parser.add_argument('--lr_decay', type=float, default=0.95, help='Learning rate decay factor')
+    parser.add_argument('--patience', type=int, default=3, help='Early stopping patience')
+    args = parser.parse_args()
     print('Training...')
     time = datetime.datetime.now().strftime("%Y-%m-%d")
+
     # 加载数据
-    (X_train, y_train), (X_val, y_val), (X_test, y_test) = load_cifar10('data/cifar-10-batches-py')
+    (X_train, y_train), (X_val, y_val), (X_test, y_test) = load_cifar10('data_dir')
     
     # 初始化模型
     model = ThreeLayerNet(input_size=3072, hidden_sizes=(2048, 1024), output_size=10)
@@ -111,10 +122,10 @@ if __name__ == '__main__':
         y_train=y_train,
         X_val=X_val,
         y_val=y_val,
-        lr=3e-2,
-        reg=5e-4,
-        epochs=100,
-        batch_size=256
+        lr=args.lr,
+        reg=args.reg,
+        epochs=args,
+        batch_size=args.batch_size
     )
     
     # 绘制训练曲线

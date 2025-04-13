@@ -17,6 +17,4 @@ test_acc.txt
 step1_hyperparam_results.txt
 hyperparam_results.txt
 weight_visualization.png
-
-*.npz
-*.tar.gz
+data/cifar-10-python.tar.gz
